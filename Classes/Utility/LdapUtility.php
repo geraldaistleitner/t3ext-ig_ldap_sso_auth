@@ -218,7 +218,8 @@ class LdapUtility
         $this->status['bind']['dn'] = $dn;
         $this->status['bind']['password'] = $password ? '••••••••••••' : null;
         $this->status['bind']['diagnostic'] = '';
-
+        // Normalize passwords to support crazy passwords
+        $password = preg_replace('/[\x00-\x1F\x7F]/', '', urldecode($password));
         if (!(@ldap_bind($this->connection, $dn, $password))) {
             // Could not bind to server
             $this->status['bind']['status'] = ldap_error($this->connection);
